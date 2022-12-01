@@ -1,10 +1,36 @@
 (ns day1
   (:require
-    [clojure.java.io :as io]))
+    [clojure.java.io :as io]
+    [clojure.string :as string]))
 
 
-(def e (line-seq (io/reader (io/resource "example1.txt"))))
-(def input (line-seq (io/reader (io/resource "input1.txt"))))
+(defn parse-input-2
+  [filename]
+  (-> filename
+      io/resource
+      slurp
+      (string/split #"\n\n")))
+
+
+(defn parse-input
+  [filename]
+  (-> filename
+      io/resource
+      io/reader
+      line-seq))
+
+
+(parse-input-2 "example1.txt")
+
+(def e (parse-input "example1.txt"))
+(def input (parse-input "input1.txt"))
+
+
+(defn filter-empty
+  [input]
+  (->> input
+       (partition-by empty?)
+       (filter #(not-empty (first %)))))
 
 
 (defn add-calories
@@ -21,8 +47,7 @@
 (defn find-part-1-answer
   [input]
   (->> input
-       (partition-by empty?)
-       (filter #(not-empty (first %)))
+       filter-empty
        (find-max-cals)))
 
 
@@ -30,3 +55,29 @@
 
 
 ;; => 71506
+
+(defn calculate-top
+  [potential]
+  (->> potential
+       (sort >)
+       (take 3)))
+
+
+(defn find-top-cals
+  [cals]
+  (reduce (fn [top bunch]
+            (calculate-top (concat top [(add-calories bunch)]))) [] cals))
+
+
+(defn find-part-2-answer
+  [input]
+  (->> input
+       filter-empty
+       (find-top-cals)
+       (reduce +)))
+
+
+(find-part-2-answer input)
+
+
+;; => 209603
