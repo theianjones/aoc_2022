@@ -12,6 +12,12 @@
       (string/split #"\n\n")))
 
 
+(take-nth 2 (partition-by nil? (map parse-long (string/split-lines (slurp "resources/example1.txt")))))
+
+
+(take-nth 2 (range 10))
+
+
 (defn parse-input
   [filename]
   (-> filename
