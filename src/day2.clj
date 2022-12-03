@@ -91,7 +91,6 @@
 
 (defn find-shape
   [[them outcome]]
-  (prn them outcome)
   (cond (= :Y outcome) (them col1)
         (= :X outcome) ((them col1) winning-guide)
         :else ((them col1) (zipmap (vals winning-guide) (keys winning-guide)))))
